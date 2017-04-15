@@ -2,3 +2,8 @@
 **/bin/debug/
 **/bin/release/
 **/obj/
+AureliaTest/wwwroot/scripts/app-bundle\.js
+
+AureliaTest/wwwroot/scripts/app-bundle\.js\.map
+
+AureliaTest/wwwroot/scripts/vendor-bundle\.js
