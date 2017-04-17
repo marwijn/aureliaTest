@@ -113,6 +113,7 @@
           "aurelia-task-queue",
           "aurelia-templating",
           "aurelia-templating-binding",
+          "aurelia-fetch-client",
           "text",
           {
             "name": "aurelia-templating-resources",
