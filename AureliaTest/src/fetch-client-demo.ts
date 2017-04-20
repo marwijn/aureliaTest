@@ -1,6 +1,5 @@
 ﻿import { autoinject } from "aurelia-framework"
-import { HttpClient } from "aurelia-fetch-client"
-
+import { HttpClient, json } from "aurelia-fetch-client"
 
 @autoinject
 export class FetchClientDemo {
@@ -11,8 +10,27 @@ export class FetchClientDemo {
   }
 
   async activate() {
-    let data: Response = await this.http.fetch("api/values");
+  }
+
+  async getValues() {
+    let data: Response = await this.http.fetch('Values');
     let x = await data.json();
-    this.message = x[0].toString();
+    this.message = x.toString();
+  }
+
+  async getValue() {
+    let data: Response = await this.http.fetch('GetValue', {
+        body: json('0')
+      });
+
+    let x = await data.json();
+    this.message = x.x;
+  }
+
+  async addValue(val: string) {
+    await this.http.fetch('AddValue', {
+      body: json(val)
+    });
+    this.activate();
   }
 }
