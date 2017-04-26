@@ -21,3 +21,5 @@ AureliaTest/AureliaTest\.csproj\.user
 AureliaTest/Properties/PublishProfiles/MarwijnAurelia - Web Deploy\.pubxml
 
 AureliaTest/Properties/PublishProfiles/MarwijnAurelia - Web Deploy\.pubxml\.user
+
+*.user
