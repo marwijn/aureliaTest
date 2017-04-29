@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AureliaTest.Controllers
@@ -17,6 +18,7 @@ namespace AureliaTest.Controllers
     private static readonly List<string> values = new List<string>(new[] { "value1", "value2" });
 
     [HttpPost]
+    [Authorize(Roles = "admin, user")]
     public IEnumerable<string> Values()
     {
       return values;
@@ -30,6 +32,7 @@ namespace AureliaTest.Controllers
 
     // POST api/values
     [HttpPost]
+    [Authorize(Roles = "admin")]
     public void AddValue([FromBody]string value)
     {
       values.Add(value);

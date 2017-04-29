@@ -20,7 +20,7 @@ export class FetchClientDemo {
 
   async getValue() {
     let data: Response = await this.http.fetch('values/GetValue', {
-        body: json('0')
+        body: json('1')
       });
 
     let x = await data.json();

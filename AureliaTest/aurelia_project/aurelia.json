@@ -114,6 +114,18 @@
           "aurelia-templating",
           "aurelia-templating-binding",
           "aurelia-fetch-client",
+          "aurelia-api",
+          "extend",
+          {
+            "name": "aurelia-authentication",
+            "path": "../node_modules/aurelia-authentication/dist/amd",
+            "main": "aurelia-authentication"
+          },
+          {
+            "name": "jwt-decode",
+            "path": "../node_modules/jwt-decode/lib",
+            "main": "index"
+          },
           "text",
           {
             "name": "aurelia-templating-resources",

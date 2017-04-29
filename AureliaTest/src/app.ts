@@ -1,13 +1,14 @@
 import {autoinject} from 'aurelia-framework';
 import { Router, RouterConfiguration } from 'aurelia-router';
 import { HttpClient } from 'aurelia-fetch-client';
+import {FetchConfig} from 'aurelia-authentication';
 
 @autoinject
 export class App {
 
   public router: Router;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private config: FetchConfig) {
     this.configHttp();
   }
 
@@ -27,6 +28,13 @@ export class App {
         moduleId: 'fetch-client-demo',
         nav: true,
         title: 'FetchClientDemo'
+      },
+      {
+        route: ['login'],
+        name: 'login',
+        moduleId: 'login',
+        nav: true,
+        title: 'Login'
       }
     ]);
 
@@ -56,5 +64,7 @@ export class App {
           }
         });
     });
+
+    this.config.configure(this.http);
   }
 }
