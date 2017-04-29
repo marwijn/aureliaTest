@@ -13,13 +13,13 @@ export class FetchClientDemo {
   }
 
   async getValues() {
-    let data: Response = await this.http.fetch('Values');
+    let data: Response = await this.http.fetch('values/Values');
     let x = await data.json();
     this.message = x.toString();
   }
 
   async getValue() {
-    let data: Response = await this.http.fetch('GetValue', {
+    let data: Response = await this.http.fetch('values/GetValue', {
         body: json('0')
       });
 
@@ -28,7 +28,7 @@ export class FetchClientDemo {
   }
 
   async addValue(val: string) {
-    await this.http.fetch('AddValue', {
+    await this.http.fetch('values/AddValue', {
       body: json(val)
     });
     this.activate();
