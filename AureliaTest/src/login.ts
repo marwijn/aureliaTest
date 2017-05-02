@@ -16,10 +16,15 @@ export class FetchClientDemo {
       username: this.email,
       password: this.password
     });
-  
   }
 
   logout() {
     this.auth.logout('');
+  }
+
+  authenticate() {
+    this.auth.authenticate('google')
+      .then(
+          response => console.debug("testing: " + response.toString()));
   }
 }
