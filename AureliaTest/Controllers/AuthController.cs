@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Headers;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -51,7 +53,7 @@ namespace AureliaTest.Controllers
 
       if (username == "marwijn")
       {
-        return CreateAccessToken("marwijn", new[] {"admin", "user"});
+        return CreateAccessToken("marwijn", new[] { "admin", "user" });
       }
       return CreateAccessToken(username, new[] { "admin", "user" });
     }
@@ -64,11 +66,11 @@ namespace AureliaTest.Controllers
       var claims = await GetOpenIdClaims(token, openIdConfig);
 
       var idClaim = claims.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier);
-        if (idClaim.Value == "100554319379838513055")
-        {
-          return CreateAccessToken("google marwijn",  new []{"user", "admin"});
-        }
-      
+      if (idClaim.Value == "100554319379838513055")
+      {
+        return CreateAccessToken("google marwijn", new[] { "user", "admin" });
+      }
+
       return null;
     }
 
@@ -85,16 +87,16 @@ namespace AureliaTest.Controllers
           new KeyValuePair<string, string>("redirect_uri", token.redirectUri),
           new KeyValuePair<string, string>("grant_type", "authorization_code"),
         });
-        var result = await client.PostAsync(openIdConfig.AuthorizationEndpoint, content);
-        string resultContent = await result.Content.ReadAsStringAsync();
+
+        var result = await client.PostAsync(openIdConfig.TokenEndpoint, content);
+        var resultContent = await result.Content.ReadAsStringAsync();
+        
         JObject jo = JObject.Parse(resultContent);
-
-
         TokenValidationParameters validationParameters =
           new TokenValidationParameters
           {
             ValidIssuer = "",
-            ValidAudiences = new[] {""},
+            ValidAudiences = new[] { "" },
             IssuerSigningKeys = openIdConfig.SigningKeys,
             ValidateAudience = false,
             ValidateIssuer = false,
@@ -102,7 +104,7 @@ namespace AureliaTest.Controllers
 
         SecurityToken validatedToken;
         JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
-        claims = handler.ValidateToken((string) jo["id_token"], validationParameters, out validatedToken);
+        claims = handler.ValidateToken((string)jo["id_token"], validationParameters, out validatedToken);
       }
       return claims;
     }
@@ -117,7 +119,7 @@ namespace AureliaTest.Controllers
       return openIdConfig;
     }
 
-    private static AccessToken CreateAccessToken (string userId, string[] roles)
+    private static AccessToken CreateAccessToken(string userId, string[] roles)
     {
       var claims = new List<Claim>();
 
@@ -139,7 +141,7 @@ namespace AureliaTest.Controllers
 
 
       string encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-      return new AccessToken {access_token = encodedJwt};
+      return new AccessToken { access_token = encodedJwt };
     }
   }
 }
