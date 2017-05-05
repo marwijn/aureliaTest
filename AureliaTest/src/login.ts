@@ -22,9 +22,7 @@ export class FetchClientDemo {
     this.auth.logout('');
   }
 
-  authenticate() {
-    this.auth.authenticate('google')
-      .then(
-          response => console.debug("testing: " + response.toString()));
+  authenticate(provider : string) {
+    this.auth.authenticate(provider);
   }
 }
