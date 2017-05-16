@@ -1,16 +1,44 @@
 import {autoinject} from 'aurelia-framework';
 import { Router, RouterConfiguration } from 'aurelia-router';
 import { HttpClient } from 'aurelia-fetch-client';
-import {FetchConfig} from 'aurelia-authentication';
+import { FetchConfig, AuthService } from 'aurelia-authentication';
+import {EventAggregator, Subscription} from 'aurelia-event-aggregator';
+// ReSharper disable once UnusedLocalImport
+import * as jwt_decode from 'jwt-decode';
 
 @autoinject
 export class App {
 
   public router: Router;
+  public userId : string;
+  private subscription : Subscription;
 
-  constructor(private http: HttpClient, private config: FetchConfig) {
+  constructor(private http: HttpClient,
+    private config: FetchConfig,
+    private auth: AuthService,
+    private eventAggregator : EventAggregator) {
     this.configHttp();
   }
+
+  public attached() {
+// ReSharper disable once TsResolvedFromInaccessibleModule
+    if (this.auth.authenticated) this.userId = jwt_decode(this.auth.getAccessToken()).userid;
+
+    this.subscription = this.eventAggregator.subscribe('authentication-change',
+      () => {
+// ReSharper disable once TsResolvedFromInaccessibleModule
+        if (this.auth.authenticated) {
+          this.userId = jwt_decode(this.auth.getAccessToken()).userid;
+        } else {
+          this.userId = null;
+        }      
+      });
+  }
+
+  public detached() {
+    this.subscription.dispose();
+  }
+
 
   public configureRouter(config: RouterConfiguration, router: Router) {
     config.title = 'Aurelia';
