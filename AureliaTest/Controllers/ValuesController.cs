@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +33,8 @@ namespace AureliaTest.Controllers
     [Authorize(Roles = "admin")]
     public void AddValue([FromBody]string value)
     {
-      values.Add(value);
+      var x = this.User.Claims.Single(c => c.Type == "userid").Value;
+      values.Add(x);
     }
   }
 }
