@@ -1,5 +1,5 @@
 import {autoinject} from 'aurelia-framework';
-import { Router, RouterConfiguration } from 'aurelia-router';
+import { Router, RouterConfiguration, NavigationInstruction, Next, Redirect } from 'aurelia-router';
 import { HttpClient } from 'aurelia-fetch-client';
 import { FetchConfig, AuthService } from 'aurelia-authentication';
 import {EventAggregator, Subscription} from 'aurelia-event-aggregator';
@@ -42,20 +42,23 @@ export class App {
 
   public configureRouter(config: RouterConfiguration, router: Router) {
     config.title = 'Aurelia';
+    config.addPipelineStep('authorize', AuthorizeStep);
     config.map([
       {
         route: ['', 'bootstrap-demo'],
         name: 'bootstrap-demo',
         moduleId: 'bootstrap-demo',
         nav: true,
-        title: 'Bootstrap'
+        title: 'Bootstrap',
+        auth: true
       },
       {
         route: ['fetch-client-demo'],
         name: 'fetch-client-demo',
         moduleId: 'fetch-client-demo',
         nav: true,
-        title: 'FetchClientDemo'
+        title: 'FetchClientDemo',
+        auth: true
       },
       {
         route: ['login'],
@@ -96,3 +99,21 @@ export class App {
     this.config.configure(this.http);
   }
 }
+
+@autoinject
+class AuthorizeStep {
+    constructor(private authService: AuthService) { }
+
+    run(navigationInstruction: NavigationInstruction, next: Next): Promise<any> {
+        if (navigationInstruction.getAllInstructions().some(i => i.config.auth)) {
+            let isLoggedIn = this.authService.isAuthenticated();
+
+            if (!isLoggedIn) {
+                return next.cancel(new Redirect('login'));
+            }
+        }
+
+        return next();
+    }
+}
+
